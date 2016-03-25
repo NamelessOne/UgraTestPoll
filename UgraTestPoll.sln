@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UgraTestPoll", "UgraTestPoll\UgraTestPoll.csproj", "{0A137FB8-57C4-43C5-AF6B-224DC249D20D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublishScripts", "PublishScripts", "{5F904F95-3D10-462B-A966-46920DC2ADEC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{11CF24FD-667B-4E15-B905-0FB374039B6C}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\Scripts\Deploy-AzureResourceGroup.ps1 = PublishScripts\Scripts\Deploy-AzureResourceGroup.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{129B2185-8C56-4621-A02A-E55D09239A3E}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\Templates\UgraTestPoll.json = PublishScripts\Templates\UgraTestPoll.json
+		PublishScripts\Templates\UgraTestPoll.param.dev.json = PublishScripts\Templates\UgraTestPoll.param.dev.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A137FB8-57C4-43C5-AF6B-224DC249D20D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A137FB8-57C4-43C5-AF6B-224DC249D20D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A137FB8-57C4-43C5-AF6B-224DC249D20D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A137FB8-57C4-43C5-AF6B-224DC249D20D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{11CF24FD-667B-4E15-B905-0FB374039B6C} = {5F904F95-3D10-462B-A966-46920DC2ADEC}
+		{129B2185-8C56-4621-A02A-E55D09239A3E} = {5F904F95-3D10-462B-A966-46920DC2ADEC}
+	EndGlobalSection
+EndGlobal

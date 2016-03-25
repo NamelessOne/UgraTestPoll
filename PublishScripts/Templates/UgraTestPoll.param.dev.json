@@ -1,0 +1,32 @@
+{
+  "siteName": {
+    "value": "UgraTestPoll"
+  },
+  "hostingPlanName": {
+    "value": "UgraTestPollPlan"
+  },
+  "siteLocation": {
+    "value": "North Europe"
+  },
+  "sku": {
+    "value": "Free"
+  },
+  "workerSize": {
+    "value": "0"
+  },
+  "serverName": {
+    "value": "ugratestpolldb"
+  },
+  "serverLocation": {
+    "value": "North Europe"
+  },
+  "administratorLogin": {
+    "value": "NamelessOne"
+  },
+  "administratorLoginPassword": {
+    "value": "Wer787364"
+  },
+  "databaseName": {
+    "value": "UgraTestPoll_db"
+  }
+}
