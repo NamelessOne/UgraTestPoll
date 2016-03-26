@@ -10,6 +10,7 @@ namespace UgraTestPoll.Controllers
     /// <summary>
     /// Tests list page controller
     /// </summary>
+    [Authorize]
     public class TestController : Controller
     {
         private PollContext db = new PollContext();
@@ -34,6 +35,28 @@ namespace UgraTestPoll.Controllers
             }
             return View(test);
         }
+
+        // GET: Test/Try/5
+        public ActionResult Try(int? id)
+        {
+            var s = User.Identity.Name;
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var test = db.Tests.Find(id);
+            if (test == null)
+            {
+                return HttpNotFound();
+            }
+            var questions = test.Questions;
+            if (questions == null)
+            {
+                return HttpNotFound();
+            }
+            return View(questions);
+        }
+
 
         // GET: Test/Create
         public ActionResult Create()
