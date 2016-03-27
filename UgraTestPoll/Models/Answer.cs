@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace UgraTestPoll.Models
 {
@@ -12,6 +13,7 @@ namespace UgraTestPoll.Models
         public bool Correct { get; set; }
 
         public virtual Question Question { get; set; }
+        public virtual ICollection<SelectedAnswer> SelectedAnswers { get; set; }
     }
 
     public class RadionAnswer : Answer

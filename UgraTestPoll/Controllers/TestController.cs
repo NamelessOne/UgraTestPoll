@@ -1,9 +1,10 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using UgraTestPoll.DataAccessLevel;
 using UgraTestPoll.Models;
+using Microsoft.AspNet.Identity;
 
 namespace UgraTestPoll.Controllers
 {
@@ -21,25 +22,9 @@ namespace UgraTestPoll.Controllers
             return View(db.Tests.ToList());
         }
 
-        // GET: Test/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Test test = db.Tests.Find(id);
-            if (test == null)
-            {
-                return HttpNotFound();
-            }
-            return View(test);
-        }
-
         // GET: Test/Try/5
         public ActionResult Try(int? id)
         {
-            var s = User.Identity.Name;
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -57,86 +42,44 @@ namespace UgraTestPoll.Controllers
             return View(questions);
         }
 
-
-        // GET: Test/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Test/Create
-        // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
-        // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ID,Name,Active")] Test test)
+        public ActionResult SaveAnswers(FormCollection form)
         {
-            if (ModelState.IsValid)
+            //TODO получаем значения из формы
+            var currentUserId = db.Users.FirstOrDefault(x => x.Login.Equals(User.Identity.Name)).ID;
+            foreach (var key in form.Keys)
             {
-                db.Tests.Add(test);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                System.Diagnostics.Debug.WriteLine("key = " + key + " value = " + form.GetValue(key.ToString()).AttemptedValue);
+                if (key.ToString().StartsWith("radio"))
+                {
+                    var radioSelectedAnswer = new RadioSelectedAnswer();
+                    radioSelectedAnswer.UserID = currentUserId;
+                    radioSelectedAnswer.AnswerID = int.Parse(form.Get(key.ToString()));
+                    db.SelectedAnswers.Add(radioSelectedAnswer);
+                }
+                else if (key.ToString().StartsWith("input"))
+                {
+                    var inputSelectedAnswer = new InputSelectedAnswer();
+                    inputSelectedAnswer.Text = form.Get(key.ToString());
+                    inputSelectedAnswer.AnswerID = int.Parse(key.ToString().Replace("input", ""));
+                    inputSelectedAnswer.UserID = currentUserId;
+                    db.SelectedAnswers.Add(inputSelectedAnswer);
+                }
+                else if (key.ToString().StartsWith("checkbox"))
+                {
+                    if(bool.Parse(form.Get(key.ToString()).Split(',')[0]))
+                    {
+                        var checkBoxSelectedAnswer = new CheckboxSelectedAnswer();
+                        checkBoxSelectedAnswer.UserID = currentUserId;
+                        checkBoxSelectedAnswer.AnswerID = int.Parse(key.ToString().Replace("checkbox", ""));
+                        db.SelectedAnswers.Add(checkBoxSelectedAnswer);
+                    }
+                }
             }
-
-            return View(test);
-        }
-
-        // GET: Test/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Test test = db.Tests.Find(id);
-            if (test == null)
-            {
-                return HttpNotFound();
-            }
-            return View(test);
-        }
-
-        // POST: Test/Edit/5
-        // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
-        // сведения см. в статье http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ID,Name,Active")] Test test)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(test).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(test);
-        }
-
-        // GET: Test/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Test test = db.Tests.Find(id);
-            if (test == null)
-            {
-                return HttpNotFound();
-            }
-            return View(test);
-        }
-
-        // POST: Test/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Test test = db.Tests.Find(id);
-            db.Tests.Remove(test);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
 
         protected override void Dispose(bool disposing)
         {
