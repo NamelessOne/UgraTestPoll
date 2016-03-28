@@ -8,6 +8,7 @@ namespace UgraTestPoll.Models
         [Key]
         public int ID { get; set; }
         public int QuestionID { get; set; }
+        [Required]
         public string AnswerText { get; set; }
         public bool Active { get; set; }
         public bool Correct { get; set; }

@@ -20,8 +20,9 @@ namespace UgraTestPoll.DataAccessLevel
 
             var users = new List<User>
             {
-            new User{Login="User 1", Password="Password 1"},
-            new User{Login="User 2", Password="Password 2"},
+            new User{Login="User 1", Password="Password"},
+            new User{Login="User 2", Password="Password"},
+            new User{Login="User 3", Password="Password"},
             };
             users.ForEach(s => context.Users.Add(s));
             context.SaveChanges();

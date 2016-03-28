@@ -153,6 +153,7 @@
     <Compile Include="ViewModels\AskedQuestionViewModel.cs" />
     <Compile Include="ViewModels\SelectedAnswerViewModel.cs" />
     <Compile Include="ViewModels\TestViewModel.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
@@ -196,9 +197,9 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Test\Try.cshtml" />
-    <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\AskedQuestionViewModel.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

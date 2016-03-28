@@ -90,18 +90,17 @@ namespace UgraTestPoll.Controllers
         }
 
         [HttpPost]
-        public ActionResult Try(TestViewModel simpleContainer)
+        public ActionResult Try(TestViewModel testViewModel)
         {
             //TODO удаление старых данных
-
             if(!ModelState.IsValid)
             {
                     ViewBag.Error = "Form is not valid; please review and try again.";
-                    return View("Try", simpleContainer);
+                    return View("Try", testViewModel);
             }
             var currentUserId = db.Users.FirstOrDefault(x => x.Login.Equals(User.Identity.Name)).ID;
             var selectedAnswers = new List<SelectedAnswer>();            
-            foreach (var question in simpleContainer.AskedQuestions)
+            foreach (var question in testViewModel.AskedQuestions)
             {
                 switch (question.Type)
                 {
@@ -134,6 +133,8 @@ namespace UgraTestPoll.Controllers
                         break;
                 }
             }
+            var oldResults = db.SelectedAnswers.Where(x => x.UserID == currentUserId && x.Answer.Question.TestId == testViewModel.TestID);
+            db.SelectedAnswers.RemoveRange(oldResults);
             db.SelectedAnswers.AddRange(selectedAnswers);
             db.SaveChanges();
             return RedirectToAction("Index");

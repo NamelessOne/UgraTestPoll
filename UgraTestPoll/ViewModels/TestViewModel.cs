@@ -12,6 +12,7 @@ namespace UgraTestPoll.ViewModels
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             bool validate = true;
+            //TODO AskedQuestion == null:/
             foreach(var question in AskedQuestions)
             {
                 switch(question.Type)
