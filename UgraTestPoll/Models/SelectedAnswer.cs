@@ -15,11 +15,9 @@ namespace UgraTestPoll.Models
 
     public class RadioSelectedAnswer : SelectedAnswer
     {
-
     }
     public class CheckboxSelectedAnswer : SelectedAnswer
     {
-
     }
     public class InputSelectedAnswer : SelectedAnswer
     {

@@ -1,0 +1,46 @@
+﻿@model UgraTestPoll.ViewModels.AskedQuestionViewModel
+
+@using UgraTestPoll.ViewModels;
+
+<tr>
+    <td>
+        @Html.HiddenFor(x => x.QuestionText)
+        @Html.HiddenFor(x => x.Type)
+        @Html.HiddenFor(x => x.Number)
+        @Html.DisplayFor(x => x.Number)
+        @Html.DisplayFor(x => x.QuestionText)
+    </td>
+</tr>
+<tr>
+    @if (Model.Type == AskedQuestionType.Radio)
+    {
+        for (int i = 0; i < Model.SelectedAnswers.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.SelectedAnswers[i].AnswerID)
+            @Html.HiddenFor(x => x.SelectedAnswers[i].Text)
+            <td>
+                @Html.RadioButtonFor(x => x.SelectedAnswerID, Model.SelectedAnswers[i].AnswerID)
+                @Html.DisplayFor(x => x.SelectedAnswers[i].Text)
+            </td>
+        }
+    }
+    else if (Model.Type == AskedQuestionType.Checkbox)
+    {
+        for (int i = 0; i < Model.SelectedAnswers.Count(); i++)
+        {
+            @Html.HiddenFor(x => x.SelectedAnswers[i].AnswerID)
+            @Html.HiddenFor(x => x.SelectedAnswers[i].Text)
+            <td>
+                @Html.CheckBoxFor(x => Model.SelectedAnswers[i].Checked)
+                @Html.DisplayFor(x => Model.SelectedAnswers[i].Text)
+            </td>
+        }
+    }
+    else if (Model.Type == AskedQuestionType.Input)
+    {
+        @Html.HiddenFor(x => x.SelectedAnswerID)
+        <td>
+            @Html.EditorFor(x => x.InputText)
+        </td>
+    }
+</tr>

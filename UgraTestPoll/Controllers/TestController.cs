@@ -4,7 +4,7 @@ using System.Net;
 using System.Web.Mvc;
 using UgraTestPoll.DataAccessLevel;
 using UgraTestPoll.Models;
-using Microsoft.AspNet.Identity;
+using UgraTestPoll.ViewModels;
 
 namespace UgraTestPoll.Controllers
 {
@@ -39,47 +39,105 @@ namespace UgraTestPoll.Controllers
             {
                 return HttpNotFound();
             }
-            return View(questions);
+            var askedQuestions = new List<AskedQuestionViewModel>();
+            foreach (var question in questions)
+            {
+                //TODO generate SelectedAnswers
+                var askedQuestion = new AskedQuestionViewModel();
+                askedQuestion.Number = question.Number;
+                askedQuestion.Active = question.Active;
+                askedQuestion.QuestionText = question.QuestionText;
+                var selectedAnswers = new List<SelectedAnswerViewModel>();
+                if (question is InputQuestion)
+                {
+                    askedQuestion.Type = AskedQuestionType.Input;
+                    askedQuestion.SelectedAnswerID = question.Answers.First().ID.ToString();
+                    var selectedAnswer = new SelectedAnswerViewModel();
+                    selectedAnswer.AnswerID = question.Answers.First().ID;
+                    selectedAnswer.Text = question.Answers.First().AnswerText;
+                    selectedAnswers.Add(selectedAnswer);
+                }
+                else if (question is RadioQuestion)
+                {
+                    askedQuestion.Type = AskedQuestionType.Radio;
+                    foreach (var answer in question.Answers)
+                    {
+                        var selectedAnswer = new SelectedAnswerViewModel();
+                        selectedAnswer.Text = answer.AnswerText;
+                        selectedAnswer.AnswerID = answer.ID;
+                        selectedAnswers.Add(selectedAnswer);
+                    }
+                }
+                else if (question is CheckboxQuestion)
+                {
+                    askedQuestion.Type = AskedQuestionType.Checkbox;
+                    foreach (var answer in question.Answers)
+                    {
+                        var selectedAnswer = new SelectedAnswerViewModel();
+                        selectedAnswer.Text = answer.AnswerText;
+                        selectedAnswer.AnswerID = answer.ID;
+                        selectedAnswers.Add(selectedAnswer);
+                    }
+                }
+                //askedQuestion.Answers = question.Answers;
+                askedQuestion.SelectedAnswers = selectedAnswers;
+                askedQuestions.Add(askedQuestion);
+            }
+            var simpleContainer = new TestViewModel();
+            simpleContainer.TestID = id.GetValueOrDefault();
+            simpleContainer.AskedQuestions = askedQuestions;
+            return View(simpleContainer);
         }
 
         [HttpPost]
-        public ActionResult SaveAnswers(FormCollection form)
+        public ActionResult Try(TestViewModel simpleContainer)
         {
-            //TODO получаем значения из формы
-            var currentUserId = db.Users.FirstOrDefault(x => x.Login.Equals(User.Identity.Name)).ID;
-            foreach (var key in form.Keys)
+            //TODO удаление старых данных
+
+            if(!ModelState.IsValid)
             {
-                System.Diagnostics.Debug.WriteLine("key = " + key + " value = " + form.GetValue(key.ToString()).AttemptedValue);
-                if (key.ToString().StartsWith("radio"))
+                    ViewBag.Error = "Form is not valid; please review and try again.";
+                    return View("Try", simpleContainer);
+            }
+            var currentUserId = db.Users.FirstOrDefault(x => x.Login.Equals(User.Identity.Name)).ID;
+            var selectedAnswers = new List<SelectedAnswer>();            
+            foreach (var question in simpleContainer.AskedQuestions)
+            {
+                switch (question.Type)
                 {
-                    var radioSelectedAnswer = new RadioSelectedAnswer();
-                    radioSelectedAnswer.UserID = currentUserId;
-                    radioSelectedAnswer.AnswerID = int.Parse(form.Get(key.ToString()));
-                    db.SelectedAnswers.Add(radioSelectedAnswer);
-                }
-                else if (key.ToString().StartsWith("input"))
-                {
-                    var inputSelectedAnswer = new InputSelectedAnswer();
-                    inputSelectedAnswer.Text = form.Get(key.ToString());
-                    inputSelectedAnswer.AnswerID = int.Parse(key.ToString().Replace("input", ""));
-                    inputSelectedAnswer.UserID = currentUserId;
-                    db.SelectedAnswers.Add(inputSelectedAnswer);
-                }
-                else if (key.ToString().StartsWith("checkbox"))
-                {
-                    if(bool.Parse(form.Get(key.ToString()).Split(',')[0]))
-                    {
-                        var checkBoxSelectedAnswer = new CheckboxSelectedAnswer();
-                        checkBoxSelectedAnswer.UserID = currentUserId;
-                        checkBoxSelectedAnswer.AnswerID = int.Parse(key.ToString().Replace("checkbox", ""));
-                        db.SelectedAnswers.Add(checkBoxSelectedAnswer);
-                    }
+                    case AskedQuestionType.Checkbox:
+                        foreach (var id in question.MultipleSelectedAnswerIDs)
+                        {
+                            var checkBoxAnswer = new CheckboxSelectedAnswer();
+                            checkBoxAnswer.AnswerID = id;
+                            checkBoxAnswer.UserID = currentUserId;
+                            selectedAnswers.Add(checkBoxAnswer);
+                        }
+                        break;
+                    case AskedQuestionType.Input:
+                        var inputAnswer = new InputSelectedAnswer();
+                        inputAnswer.UserID = currentUserId;
+                        inputAnswer.Text = question.InputText;
+                        inputAnswer.AnswerID = int.Parse(question.SelectedAnswerID); //TODO
+                        selectedAnswers.Add(inputAnswer);
+                        break;
+                    case AskedQuestionType.Radio:
+                        var radioAnswer = new RadioSelectedAnswer();
+                        radioAnswer.UserID = currentUserId;
+                        //if(question.SelectedAnswerID==null)
+                        //{
+                        //    ModelState.AddModelError("Radio button", "Check at least one of variants");
+                        //    return RedirectToAction("Try", simpleContainer.TestID);
+                        //}
+                        radioAnswer.AnswerID = int.Parse(question.SelectedAnswerID); //TODO
+                        selectedAnswers.Add(radioAnswer);
+                        break;
                 }
             }
+            db.SelectedAnswers.AddRange(selectedAnswers);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
 
         protected override void Dispose(bool disposing)
         {

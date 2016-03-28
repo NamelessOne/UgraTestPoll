@@ -37,11 +37,11 @@ namespace UgraTestPoll.DataAccessLevel
 
             var answers = new List<Answer>
             {
-            new RadionAnswer{AnswerText="Answer 1", Active=true, Correct=true, QuestionID=questions[0].ID},
-            new RadionAnswer{AnswerText="Answer 2", Active=true, Correct=false, QuestionID=questions[0].ID},
-            new CheckBoxAnswer{AnswerText="Answer 1", Active=true, Correct=true, QuestionID=questions[1].ID},
-            new CheckBoxAnswer{AnswerText="Answer 2", Active=true, Correct=true, QuestionID=questions[1].ID},
-            new InputAnswer{AnswerText="Answer 1", Active=true, Correct=true, QuestionID=questions[2].ID},
+            new RadionAnswer{AnswerText="Radio Answer 1", Active=true, Correct=true, QuestionID=questions[0].ID},
+            new RadionAnswer{AnswerText="Radio Answer 2", Active=true, Correct=false, QuestionID=questions[0].ID},
+            new CheckBoxAnswer{AnswerText="Checkbox Answer 1", Active=true, Correct=true, QuestionID=questions[1].ID},
+            new CheckBoxAnswer{AnswerText="Checkbox Answer 2", Active=true, Correct=true, QuestionID=questions[1].ID},
+            new InputAnswer{AnswerText="Input Answer 1", Active=true, Correct=true, QuestionID=questions[2].ID},
             };           
             answers.ForEach(s => context.Answers.Add(s));
             context.SaveChanges();

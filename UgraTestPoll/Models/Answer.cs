@@ -28,16 +28,6 @@ namespace UgraTestPoll.Models
 
     public class InputAnswer : Answer
     {
-        //TODO Correct always true, there is no other variants for input
-        public new bool Correct
-        {
-            get
-            {
-                return true;
-            }
-            set
-            {
-            }
-        }
+
     }
 }
