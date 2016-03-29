@@ -1,16 +1,13 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
-using UgraTestPoll.DataAccessLevel;
-using UgraTestPoll.Models;
 using UgraTestPoll.ViewModels;
 
 namespace UgraTestPoll.Controllers
 {
     public class AccountController : Controller
     {
-        private PollContext db = new PollContext();
+        private AccountHandler handler = new AccountHandler();
 
         public ActionResult Index()
         {
@@ -36,7 +33,7 @@ namespace UgraTestPoll.Controllers
                 return View("Login");
             }
 
-            if (db.Users.Any(usr => usr.Login == user.Login && usr.Password == user.Password))
+            if (handler.Login(user))
                 FormsAuthentication.RedirectFromLoginPage(user.Login, true);
 
             ViewBag.Error = "Credentials invalid. Please try again.";
@@ -51,27 +48,17 @@ namespace UgraTestPoll.Controllers
                 ViewBag.Error = "Form is not valid; please review and try again.";
                 return View("Register");
             }
-            if (db.Users.Any(u => u.Login.Equals(user.Login)))
-            {
-                ViewBag.Error = "User with same username already exists.";
-                return View("Register");
-            }
-            var dbUser = new User();
-            dbUser.Password = user.Password;
-            dbUser.Login = user.Login;
-            db.Users.Add(dbUser);
             try
             {
-                db.SaveChanges();
+                handler.Register(user);
             }
-            catch (Exception) //TODO глобальный exception - плохо
+            catch (Exception e)
             {
-                ViewBag.Error = "Credentials invalid. Please try again.";
+                ViewBag.Error = e.Message;
                 return View("Register");
             }
-
             FormsAuthentication.RedirectFromLoginPage(user.Login, true);
-
+            //Предыдущая строчка равносильная return, вроде:/
             ViewBag.Error = "Credentials invalid. Please try again.";
             return View("Register");
         }
