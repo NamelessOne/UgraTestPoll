@@ -1,7 +1,7 @@
 ﻿@model UgraTestPoll.ViewModels.UserViewModel
 
 @{
-    ViewBag.Title = "Login";
+    ViewBag.Title = "Register";
 }
 
 <h2>Login</h2>
@@ -34,14 +34,10 @@
         </div>
 
         <p>
-            <input type="submit" value="Login" />
+            <input type="submit" value="Register" />
         </p>
     </fieldset>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

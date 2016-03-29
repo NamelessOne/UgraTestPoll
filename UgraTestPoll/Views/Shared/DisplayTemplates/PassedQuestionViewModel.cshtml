@@ -7,11 +7,30 @@
     </td>
 </tr>
 <tr>
-    @foreach(var answer in Model.SelectedAnswers)
-    {
-        <td>
-            @Html.DisplayFor(x => answer)
-        </td>
-    }
+    <td>
+        Selected answers :
+        <ul>
+            @foreach (var answer in Model.SelectedAnswers)
+            {
+                <li>
+                    @Html.DisplayFor(x => answer)
+                </li>
+            }
+        </ul>
+    </td>
+</tr>
+<tr>
+    <td>
+        Correct answers :
+        <ul>
 
+            @foreach (var correctAnswer in Model.CorrectAnswers)
+            {
+                <li>
+                    @Html.DisplayFor(x => correctAnswer)
+                </li>
+
+            }
+        </ul>
+    </td>
 </tr>

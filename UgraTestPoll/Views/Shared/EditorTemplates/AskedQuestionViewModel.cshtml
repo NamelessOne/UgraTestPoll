@@ -12,35 +12,39 @@
     </td>
 </tr>
 <tr>
-    @if (Model.Type == AskedQuestionType.Radio)
-    {
-        for (int i = 0; i < Model.SelectedAnswers.Count(); i++)
-        {
-            @Html.HiddenFor(x => x.SelectedAnswers[i].AnswerID)
-            @Html.HiddenFor(x => x.SelectedAnswers[i].Text)
-            <td>
-                @Html.RadioButtonFor(x => x.SelectedAnswerID, Model.SelectedAnswers[i].AnswerID)
-                @Html.DisplayFor(x => x.SelectedAnswers[i].Text)
-            </td>
-        }
-    }
-    else if (Model.Type == AskedQuestionType.Checkbox)
-    {
-        for (int i = 0; i < Model.SelectedAnswers.Count(); i++)
-        {
-            @Html.HiddenFor(x => x.SelectedAnswers[i].AnswerID)
-            @Html.HiddenFor(x => x.SelectedAnswers[i].Text)
-            <td>
-                @Html.CheckBoxFor(x => Model.SelectedAnswers[i].Checked)
-                @Html.DisplayFor(x => Model.SelectedAnswers[i].Text)
-            </td>
-        }
-    }
-    else if (Model.Type == AskedQuestionType.Input)
-    {
-        @Html.HiddenFor(x => x.SelectedAnswerID)
-        <td>
-            @Html.EditorFor(x => x.InputText)
-        </td>
-    }
+    <td>
+        <ul>
+            @if (Model.Type == AskedQuestionType.Radio)
+            {
+                for (int i = 0; i < Model.Answers.Count(); i++)
+                {
+                    @Html.HiddenFor(x => x.Answers[i].AnswerID)
+                    @Html.HiddenFor(x => x.Answers[i].Text)
+                    <li>
+                        @Html.RadioButtonFor(x => x.SelectedAnswerID, Model.Answers[i].AnswerID)
+                        @Html.DisplayFor(x => x.Answers[i].Text)
+                    </li>
+                }
+            }
+            else if (Model.Type == AskedQuestionType.Checkbox)
+            {
+                for (int i = 0; i < Model.Answers.Count(); i++)
+                {
+                    <li>
+                        @Html.HiddenFor(x => x.Answers[i].AnswerID)
+                        @Html.HiddenFor(x => x.Answers[i].Text)
+                        @Html.CheckBoxFor(x => Model.Answers[i].Checked)
+                        @Html.DisplayFor(x => Model.Answers[i].Text)
+                    </li>
+                }
+            }
+            else if (Model.Type == AskedQuestionType.Input)
+            {
+                <li>
+                    @Html.HiddenFor(x => x.SelectedAnswerID)
+                    @Html.EditorFor(x => x.InputText)
+                </li>
+            }
+        </ul>
+    </td>
 </tr>

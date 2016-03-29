@@ -4,8 +4,11 @@
     ViewBag.Title = "Tests";
 }
 
-<h2>Users</h2>
-
+<h2>Tests</h2>
+@if (Model.Count() == 0)
+{
+    <p>The user still has not passed any test</p>
+}
 <table class="table">
     <tr>
         <th>

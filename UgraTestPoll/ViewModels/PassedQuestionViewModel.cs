@@ -9,5 +9,6 @@ namespace UgraTestPoll.ViewModels
         public bool Active { get; set; }
 
         public List<string> SelectedAnswers { get; set; }
+        public List<string> CorrectAnswers { get; set; }
     }
 }

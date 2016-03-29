@@ -59,6 +59,9 @@ namespace UgraTestPoll.Controllers
                 passedQuestionVM.Number = question.Number;
                 passedQuestionVM.QuestionText = question.QuestionText;
                 passedQuestionVM.SelectedAnswers = new List<string>();
+                passedQuestionVM.CorrectAnswers = new List<string>();
+                var correctAnswers = question.Answers.Where(x => x.Correct).Select(x => x.AnswerText);
+                passedQuestionVM.CorrectAnswers.AddRange(correctAnswers);
                 var passedAnswers = question.Answers.Select(x => x.SelectedAnswers).SelectMany(x => x).Where(x => x.UserID == userID.Value);
                 foreach(var passedAnswer in passedAnswers)
                 {

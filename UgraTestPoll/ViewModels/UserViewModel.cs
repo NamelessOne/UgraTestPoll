@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace UgraTestPoll.ViewModels
 {
@@ -6,6 +7,7 @@ namespace UgraTestPoll.ViewModels
     {
         public int ID { get; set; }
         [Required]
+        [DisplayName("User Login")]
         public string Login { get; set; }
         [Required]
         public string Password { get; set; }

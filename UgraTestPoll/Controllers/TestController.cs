@@ -40,14 +40,15 @@ namespace UgraTestPoll.Controllers
                 return HttpNotFound();
             }
             var questions = test.Questions.Where(q => q.Active);
-            if (questions == null || questions.Count() == 0) //TODO для теста без вопросов - отдельный обработчик
+            if (questions == null || questions.Count() == 0) //Если в тесте нет вопросов - что-то не так с заполнением базы, выдаём 404
             {
                 return HttpNotFound();
             }
             var askedQuestions = new List<AskedQuestionViewModel>();
             foreach (var question in questions)
             {
-                //TODO generate SelectedAnswers
+                if (question.Answers.Count == 0)
+                    return HttpNotFound();//Если у вопроса нет ни одного ответа - что-то не так с заполнением базы, выдаём 404
                 var askedQuestion = new AskedQuestionViewModel();
                 askedQuestion.Number = question.Number;
                 askedQuestion.QuestionText = question.QuestionText;
@@ -83,13 +84,13 @@ namespace UgraTestPoll.Controllers
                         selectedAnswers.Add(selectedAnswer);
                     }
                 }
-                //askedQuestion.Answers = question.Answers;
-                askedQuestion.SelectedAnswers = selectedAnswers;
+                askedQuestion.Answers = selectedAnswers;
                 askedQuestions.Add(askedQuestion);
             }
             var simpleContainer = new TestViewModel();
             simpleContainer.TestID = id.GetValueOrDefault();
             simpleContainer.AskedQuestions = askedQuestions;
+            simpleContainer.TestName = test.Name;
             return View(simpleContainer);
         }
 
@@ -121,18 +122,13 @@ namespace UgraTestPoll.Controllers
                         var inputAnswer = new InputSelectedAnswer();
                         inputAnswer.UserID = currentUserId;
                         inputAnswer.Text = question.InputText;
-                        inputAnswer.AnswerID = int.Parse(question.SelectedAnswerID); //TODO
+                        inputAnswer.AnswerID = int.Parse(question.SelectedAnswerID);
                         selectedAnswers.Add(inputAnswer);
                         break;
                     case AskedQuestionType.Radio:
                         var radioAnswer = new RadioSelectedAnswer();
                         radioAnswer.UserID = currentUserId;
-                        //if(question.SelectedAnswerID==null)
-                        //{
-                        //    ModelState.AddModelError("Radio button", "Check at least one of variants");
-                        //    return RedirectToAction("Try", simpleContainer.TestID);
-                        //}
-                        radioAnswer.AnswerID = int.Parse(question.SelectedAnswerID); //TODO
+                        radioAnswer.AnswerID = int.Parse(question.SelectedAnswerID);
                         selectedAnswers.Add(radioAnswer);
                         break;
                 }

@@ -13,7 +13,7 @@ namespace UgraTestPoll.ViewModels
         public bool Active { get; set; }
         public AskedQuestionType Type {get; set;}
 
-        public List<SelectedAnswerViewModel> SelectedAnswers { get; set; }
+        public List<SelectedAnswerViewModel> Answers { get; set; }
         public string InputText { get; set; }
         private string _selectedAnswerId;
         public string SelectedAnswerID {
@@ -32,7 +32,7 @@ namespace UgraTestPoll.ViewModels
             get
             {
                 List<int> result = new List<int>();
-                foreach(var answer in SelectedAnswers)
+                foreach(var answer in Answers)
                 {
                     if (answer.Checked)
                         result.Add(answer.AnswerID);
