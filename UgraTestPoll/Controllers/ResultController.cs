@@ -45,7 +45,7 @@ namespace UgraTestPoll.Controllers
 
         public ActionResult TestResults(int? id, int? userID)
         {
-            if (id == null|| userID == null)
+            if (id == null || userID == null || db.Users.Find(userID) == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -63,9 +63,9 @@ namespace UgraTestPoll.Controllers
                 var correctAnswers = question.Answers.Where(x => x.Correct).Select(x => x.AnswerText);
                 passedQuestionVM.CorrectAnswers.AddRange(correctAnswers);
                 var passedAnswers = question.Answers.Select(x => x.SelectedAnswers).SelectMany(x => x).Where(x => x.UserID == userID.Value);
-                foreach(var passedAnswer in passedAnswers)
+                foreach (var passedAnswer in passedAnswers)
                 {
-                    if(passedAnswer is InputSelectedAnswer)
+                    if (passedAnswer is InputSelectedAnswer)
                     {
                         passedQuestionVM.SelectedAnswers.Add((passedAnswer as InputSelectedAnswer).Text);
                     }
