@@ -1,0 +1,25 @@
+﻿@model TestViewModel
+
+@using UgraTestPoll.ViewModels;
+
+@{
+    ViewBag.Title = Model.TestName;
+}
+
+@if (ViewBag.Error != null)
+{
+    <p class="error">@Html.Raw(ViewBag.Error)</p>
+}
+
+
+
+<h2>@Html.DisplayFor(m => Model.TestName)</h2>
+@using (Html.BeginForm())
+{
+    <table>
+        @Html.HiddenFor(x => x.TestName)
+        @Html.HiddenFor(x => x.TestID)
+        @Html.EditorFor(x => x.AskedQuestions)
+    </table>
+    <input type="submit" value="Complete"/>
+}
