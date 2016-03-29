@@ -2,11 +2,15 @@
 
 namespace UgraTestPoll.Models
 {
+    /// <summary>
+    /// Answer selected by user. 
+    /// </summary>
     public abstract class SelectedAnswer
     {
         [Key]
         public int ID { get; set; }
-        public int AnswerID { get; set; }
+        public int AnswerID { get; set; } //ID of answer which user selected.
+                                          //If it is InputSelectedAnswer (answer without options), answer text must be obtined from Text fiel of SelectedAnswer, not SelectedAnswer.Answer
         public int UserID { get; set; }
 
         public virtual Answer Answer { get; set; } 

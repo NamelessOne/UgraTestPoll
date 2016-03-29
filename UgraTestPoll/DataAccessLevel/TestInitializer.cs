@@ -8,6 +8,10 @@ namespace UgraTestPoll.DataAccessLevel
     /// </summary>
     public class TestInitializer : System.Data.Entity.DropCreateDatabaseIfModelChanges<PollContext>
     {
+        /// <summary>
+        /// If model changed, recreate db tables and fill it with example data
+        /// </summary>
+        /// <param name="context"></param>
         protected override void Seed(PollContext context)
         {
             var tests = new List<Test>

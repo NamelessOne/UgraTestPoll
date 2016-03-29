@@ -2,6 +2,9 @@
 
 namespace UgraTestPoll.ViewModels
 {
+    /// <summary>
+    /// VM for display results with user selected and currect answers
+    /// </summary>
     public class PassedQuestionViewModel
     {
         public int Number { get; set; }

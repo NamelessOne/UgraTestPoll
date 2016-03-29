@@ -2,6 +2,7 @@
 
 namespace UgraTestPoll.ViewModels
 {
+
     public class PassedTestViewModel
     {
         public string TestName { get; set; }

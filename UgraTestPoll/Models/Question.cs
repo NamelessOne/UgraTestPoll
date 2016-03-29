@@ -3,10 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace UgraTestPoll.Models
 {
-    //public enum QuestionType
-    //{
-    //    Radio, Checkbox, Input
-    //}
+    /// <summary>
+    /// Test question. Each question must have at least one answer.
+    /// </summary>
     public abstract class Question
     {
         [Key]
@@ -14,7 +13,6 @@ namespace UgraTestPoll.Models
         public int TestId { get; set; }
         public string QuestionText { get; set; }
         public int Number { get; set; }
-        //public QuestionType QuestionType { get; set; }
         public bool Active { get; set; }
 
         public virtual Test Test { get; set; }

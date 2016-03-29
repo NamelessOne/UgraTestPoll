@@ -12,14 +12,21 @@ namespace UgraTestPoll.Controllers
     public class TestController : Controller
     {
         private TestHandler handler = new TestHandler();
-        // GET: Test
+        /// <summary>
+        /// Show all possible tests
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             var tests = handler.GetActiveTests();
             return View(tests);
         }
 
-        // GET: Test/Pass/5
+        /// <summary>
+        /// Show test by id
+        /// </summary>
+        /// <param name="id">test id</param>
+        /// <returns>404 if test not found, or test havent questions, or one of questions have no answers</returns>
         public ActionResult Pass(int? id)
         {
             if (id == null)
@@ -37,7 +44,11 @@ namespace UgraTestPoll.Controllers
             }
             return View(testModel);
         }
-
+        /// <summary>
+        /// Validate and save test results if validation complete. Redirect to tests list if successful.
+        /// </summary>
+        /// <param name="testViewModel"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Pass(TestViewModel testViewModel)
         {
@@ -51,20 +62,11 @@ namespace UgraTestPoll.Controllers
             {
                 handler.SaveTestResults(testViewModel, User.Identity.Name);
             }
-            catch (WrongDBDataException) //Юзернейм есть, юзера в базе нет. Разлогиниваем его. 
+            catch (WrongDBDataException) //User with given username not exists in db. Logout.
             {
                 RedirectToAction("Logout", "Account");
             }
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                handler.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

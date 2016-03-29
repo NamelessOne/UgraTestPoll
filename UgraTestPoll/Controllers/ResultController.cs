@@ -5,21 +5,35 @@ using UgraTestPoll.ViewModels;
 
 namespace UgraTestPoll.Controllers
 {
+    /// <summary>
+    /// Controller for Test result pages (users list, tests list and testanswers pages).
+    /// </summary>
     public class ResultController : Controller
     {
         private ResultHandler handler = new ResultHandler();
-        // GET: Result
+
+        /// <summary>
+        /// Index page. Automatically redirects to UsersList.
+        /// </summary>
         public ActionResult Index()
         {
             return RedirectToAction("UsersList");
         }
 
+        /// <summary>
+        /// Users list page.
+        /// </summary>
         public ActionResult UsersList()
         {
             var users = handler.GetUsersList();
             return View(users);
         }
 
+        /// <summary>
+        /// Test passed by user with given id
+        /// </summary>
+        /// <param name="id">Id of user</param>
+        /// <returns></returns>
         public ActionResult UserTests(int? id)
         {
             if (id == null)
@@ -29,7 +43,12 @@ namespace UgraTestPoll.Controllers
             var tests = handler.GetTestsForUser(id.Value);
             return View(tests);
         }
-
+        /// <summary>
+        /// Results of user with given id for test with given id.
+        /// </summary>
+        /// <param name="id">test id</param>
+        /// <param name="userID">user id</param>
+        /// <returns></returns>
         public ActionResult TestResults(int? id, int? userID)
         {
             if (id == null || userID == null)

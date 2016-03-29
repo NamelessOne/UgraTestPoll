@@ -10,6 +10,6 @@ namespace UgraTestPoll.Models
         public string Name { get; set; }
         public bool Active { get; set; }
 
-        public virtual ICollection<Question> Questions { get; set; }
+        public virtual ICollection<Question> Questions { get; set; } 
     }
 }

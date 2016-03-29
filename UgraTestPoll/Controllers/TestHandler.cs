@@ -12,6 +12,7 @@ namespace UgraTestPoll.Controllers
     {
         private PollContext db = new PollContext();
 
+        /// <returns>Active tests</returns>
         public List<TestsListElementViewModel> GetActiveTests()
         {
             var tests = new List<TestsListElementViewModel>();
@@ -23,8 +24,10 @@ namespace UgraTestPoll.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Gets testVM with questions and answers.
         /// </summary>
+        /// <exception cref="WrongDBDataException">Wrong db relations structure for given test id</exception>
+        /// <returns>testVM with questions and answers.</returns>
         internal TestViewModel GetTestViewModel(int id)
         {
             var test = db.Tests.Find(id);
@@ -38,7 +41,7 @@ namespace UgraTestPoll.Controllers
                 throw new WrongDBDataException("Test with given id has no questions");
             }
             var askedQuestions = new List<AskedQuestionViewModel>();
-            foreach (var question in questions)
+            foreach (var question in questions) //for each question get all possible answers
             {
                 if (question.Answers.Count == 0)
                     throw new WrongDBDataException("One of questions has no answers");
@@ -87,6 +90,12 @@ namespace UgraTestPoll.Controllers
             return simpleContainer;
         }
 
+        /// <summary>
+        /// Save test results to database.
+        /// </summary>
+        /// <param name="username">User which passed the test</param>
+        /// <param name="testViewModel">TestVM from test form which must be saved</param>
+        /// <exception cref="WrongDBDataException">"User with given username not found</exception>
         internal void SaveTestResults(TestViewModel testViewModel, string username)
         {
             int currentUserId;
@@ -116,7 +125,7 @@ namespace UgraTestPoll.Controllers
                         var inputAnswer = new InputSelectedAnswer();
                         inputAnswer.UserID = currentUserId;
                         inputAnswer.Text = question.InputText;
-                        inputAnswer.AnswerID = int.Parse(question.SelectedAnswerID);
+                        inputAnswer.AnswerID = int.Parse(question.SelectedAnswerID); 
                         selectedAnswers.Add(inputAnswer);
                         break;
                     case AskedQuestionType.Radio:
@@ -127,15 +136,12 @@ namespace UgraTestPoll.Controllers
                         break;
                 }
             }
+            //Remove old results of user for this test from database
             var oldResults = db.SelectedAnswers.Where(x => x.UserID == currentUserId && x.Answer.Question.TestId == testViewModel.TestID);
             db.SelectedAnswers.RemoveRange(oldResults);
+            //Add ne results to db
             db.SelectedAnswers.AddRange(selectedAnswers);
             db.SaveChanges();
-        }
-
-        internal void Dispose()
-        {
-            db.Dispose();
         }
     }
 }
