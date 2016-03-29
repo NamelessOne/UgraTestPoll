@@ -19,7 +19,12 @@ namespace UgraTestPoll.Controllers
         // GET: Test
         public ActionResult Index()
         {
-            return View(db.Tests.ToList());
+            var tests = new List<TestsListElementViewModel>();
+            foreach (var test in db.Tests.Where(t => t.Active))
+            {
+                tests.Add(new TestsListElementViewModel { Name = test.Name, ID = test.ID });
+            }
+            return View(tests);
         }
 
         // GET: Test/Try/5
@@ -30,12 +35,12 @@ namespace UgraTestPoll.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var test = db.Tests.Find(id);
-            if (test == null)
+            if (test == null || !test.Active)
             {
                 return HttpNotFound();
             }
-            var questions = test.Questions;
-            if (questions == null)
+            var questions = test.Questions.Where(q => q.Active);
+            if (questions == null || questions.Count() == 0) //TODO для теста без вопросов - отдельный обработчик
             {
                 return HttpNotFound();
             }
@@ -45,7 +50,6 @@ namespace UgraTestPoll.Controllers
                 //TODO generate SelectedAnswers
                 var askedQuestion = new AskedQuestionViewModel();
                 askedQuestion.Number = question.Number;
-                askedQuestion.Active = question.Active;
                 askedQuestion.QuestionText = question.QuestionText;
                 var selectedAnswers = new List<SelectedAnswerViewModel>();
                 if (question is InputQuestion)
@@ -93,13 +97,13 @@ namespace UgraTestPoll.Controllers
         public ActionResult Try(TestViewModel testViewModel)
         {
             //TODO удаление старых данных
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                    ViewBag.Error = "Form is not valid; please review and try again.";
-                    return View("Try", testViewModel);
+                ViewBag.Error = "Form is not valid; please review and try again.";
+                return View("Try", testViewModel);
             }
             var currentUserId = db.Users.FirstOrDefault(x => x.Login.Equals(User.Identity.Name)).ID;
-            var selectedAnswers = new List<SelectedAnswer>();            
+            var selectedAnswers = new List<SelectedAnswer>();
             foreach (var question in testViewModel.AskedQuestions)
             {
                 switch (question.Type)

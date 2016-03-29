@@ -1,4 +1,5 @@
-﻿using System.Data.Entity.Infrastructure;
+﻿using System;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -51,7 +52,11 @@ namespace UgraTestPoll.Controllers
                 ViewBag.Error = "Form is not valid; please review and try again.";
                 return View("Register");
             }
-
+            if (db.Users.Any(u => u.Login.Equals(user.Login)))
+            {
+                ViewBag.Error = "User with same username already exists.";
+                return View("Register");
+            }
             var dbUser = new User();
             dbUser.Password = user.Password;
             dbUser.Login = user.Login;
@@ -60,18 +65,13 @@ namespace UgraTestPoll.Controllers
             {
                 db.SaveChanges();
             }
-            catch(DbUpdateException)
-            {
-                ViewBag.Error = "User with same login already exists. Please choose other login.";
-                return View("Register");
-            } catch (System.Data.Entity.Validation.DbEntityValidationException)
+            catch (Exception) //TODO глобальный exception - плохо
             {
                 ViewBag.Error = "Credentials invalid. Please try again.";
                 return View("Register");
             }
 
-            if (db.Users.Any(usr => usr.Login == user.Login && usr.Password == user.Password))
-                FormsAuthentication.RedirectFromLoginPage(user.Login, true);
+            FormsAuthentication.RedirectFromLoginPage(user.Login, true);
 
             ViewBag.Error = "Credentials invalid. Please try again.";
             return View("Register");

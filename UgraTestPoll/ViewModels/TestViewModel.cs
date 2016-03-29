@@ -13,11 +13,13 @@ namespace UgraTestPoll.ViewModels
         {
             bool validate = true;
             //TODO AskedQuestion == null:/
-            foreach(var question in AskedQuestions)
+            foreach (var question in AskedQuestions)
             {
-                switch(question.Type)
+                switch (question.Type)
                 {
                     case AskedQuestionType.Checkbox:
+                        if (question.MultipleSelectedAnswerIDs.Count < 1)
+                            validate = false;
                         break;
                     case AskedQuestionType.Radio:
                         if (question.SelectedAnswerID == null)

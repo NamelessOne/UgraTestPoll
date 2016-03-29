@@ -1,0 +1,17 @@
+﻿@model UgraTestPoll.ViewModels.PassedQuestionViewModel
+
+<tr>
+    <td>
+        @Html.DisplayFor(x => x.Number)
+        @Html.DisplayFor(x => x.QuestionText)
+    </td>
+</tr>
+<tr>
+    @foreach(var answer in Model.SelectedAnswers)
+    {
+        <td>
+            @Html.DisplayFor(x => answer)
+        </td>
+    }
+
+</tr>

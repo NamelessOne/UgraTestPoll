@@ -22,6 +22,5 @@ namespace UgraTestPoll.Models
     public class InputSelectedAnswer : SelectedAnswer
     {
         public string Text { get; set; }
-
     }
 }

@@ -1,0 +1,20 @@
+﻿@model PassedTestViewModel
+
+@using UgraTestPoll.ViewModels;
+
+@{
+    ViewBag.Title = "TestResults";
+}
+
+@if (ViewBag.Error != null)
+{
+    <p class="error">@Html.Raw(ViewBag.Error)</p>
+}
+
+<h2>Try</h2>
+@using (Html.BeginForm())
+{
+    <table>
+        @Html.DisplayFor(x => x.Questions)
+    </table>
+}

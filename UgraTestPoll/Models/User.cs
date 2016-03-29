@@ -6,10 +6,9 @@ namespace UgraTestPoll.Models
 {
     public class User
     {
-        [Key, Column(Order = 1)]
+        [Key]
         public int ID { get; set; }
         [Required]
-        [Key, Column(Order = 2)]
         public string Login { get; set; }
         [Required]
         public string Password { get; set; }
