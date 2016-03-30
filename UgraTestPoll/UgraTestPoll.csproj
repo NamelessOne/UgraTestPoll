@@ -137,12 +137,12 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AccountHandler.cs" />
+    <Compile Include="Controllers\Handlers\AccountHandler.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ResultController.cs" />
-    <Compile Include="Controllers\ResultHandler.cs" />
+    <Compile Include="Controllers\Handlers\ResultHandler.cs" />
     <Compile Include="Controllers\TestController.cs" />
-    <Compile Include="Controllers\TestHandler.cs" />
+    <Compile Include="Controllers\Handlers\TestHandler.cs" />
     <Compile Include="DataAccessLevel\PollContext.cs" />
     <Compile Include="DataAccessLevel\TestInitializer.cs" />
     <Compile Include="Exceptions\Exceptions.cs" />

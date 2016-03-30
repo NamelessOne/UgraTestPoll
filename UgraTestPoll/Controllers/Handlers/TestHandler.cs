@@ -6,7 +6,7 @@ using System;
 using UgraTestPoll.Models;
 using UgraTestPoll.Exceptions;
 
-namespace UgraTestPoll.Controllers
+namespace UgraTestPoll.Controllers.Handlers
 {
     internal class TestHandler
     {

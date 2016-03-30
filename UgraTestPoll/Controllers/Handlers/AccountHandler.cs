@@ -5,7 +5,7 @@ using UgraTestPoll.Exceptions;
 using UgraTestPoll.Models;
 using UgraTestPoll.ViewModels;
 
-namespace UgraTestPoll.Controllers
+namespace UgraTestPoll.Controllers.Handlers
 {
     /// <summary>
     /// Handle account controller requests.
