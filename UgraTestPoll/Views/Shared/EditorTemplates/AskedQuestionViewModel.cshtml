@@ -41,8 +41,8 @@
             else if (Model.Type == AskedQuestionType.Input)
             {
                 <li>
-                    @Html.HiddenFor(x => x.SelectedAnswerID)
-                    @Html.EditorFor(x => x.InputText)
+                    @Html.HiddenFor(x => x.Answers[0].AnswerID)
+                    @Html.EditorFor(x => x.Answers[0].Text)
                 </li>
             }
         </ul>

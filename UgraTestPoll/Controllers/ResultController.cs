@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Web.Mvc;
 using UgraTestPoll.Exceptions;
 using UgraTestPoll.ViewModels;
@@ -36,11 +37,12 @@ namespace UgraTestPoll.Controllers
         /// <returns></returns>
         public ActionResult UserTests(int? id)
         {
-            if (id == null)
+            if (id == null || !handler.IsUserExists(id.Value))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var tests = handler.GetTestsForUser(id.Value);
+            List<TestsListElementViewModel> tests;
+            tests = handler.GetTestsForUser(id.Value);
             return View(tests);
         }
         /// <summary>
@@ -51,7 +53,7 @@ namespace UgraTestPoll.Controllers
         /// <returns></returns>
         public ActionResult TestResults(int? id, int? userID)
         {
-            if (id == null || userID == null)
+            if (id == null || userID == null || !handler.IsUserExists(userID.Value))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }

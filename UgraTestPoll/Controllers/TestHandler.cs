@@ -36,14 +36,14 @@ namespace UgraTestPoll.Controllers
                 throw new WrongDBDataException("Test with given id not found");
             }
             var questions = test.Questions.Where(q => q.Active);
-            if (questions == null || questions.Count() == 0) //Если в тесте нет вопросов - что-то не так с заполнением базы, выдаём 404
+            if (questions == null || questions.Count() == 0) //If text not contains quistions - something wrong with db, return 404
             {
                 throw new WrongDBDataException("Test with given id has no questions");
             }
             var askedQuestions = new List<AskedQuestionViewModel>();
             foreach (var question in questions) //for each question get all possible answers
             {
-                if (question.Answers.Count == 0)
+                if (question.Answers.Count < 1)
                     throw new WrongDBDataException("One of questions has no answers");
                 var askedQuestion = new AskedQuestionViewModel();
                 askedQuestion.Number = question.Number;
@@ -52,10 +52,8 @@ namespace UgraTestPoll.Controllers
                 if (question is InputQuestion)
                 {
                     askedQuestion.Type = AskedQuestionType.Input;
-                    askedQuestion.SelectedAnswerID = question.Answers.First().ID.ToString();
                     var selectedAnswer = new SelectedAnswerViewModel();
                     selectedAnswer.AnswerID = question.Answers.First().ID;
-                    selectedAnswer.Text = question.Answers.First().AnswerText;
                     selectedAnswers.Add(selectedAnswer);
                 }
                 else if (question is RadioQuestion)
@@ -95,7 +93,7 @@ namespace UgraTestPoll.Controllers
         /// </summary>
         /// <param name="username">User which passed the test</param>
         /// <param name="testViewModel">TestVM from test form which must be saved</param>
-        /// <exception cref="WrongDBDataException">"User with given username not found</exception>
+        /// <exception cref="UserNotFoundException">"User with given username not found</exception>
         internal void SaveTestResults(TestViewModel testViewModel, string username)
         {
             int currentUserId;
@@ -105,7 +103,7 @@ namespace UgraTestPoll.Controllers
             }
             catch (Exception)
             {
-                throw new WrongDBDataException("User with given username not found");
+                throw new UserNotFoundException("User with given username not found");
             }
             var selectedAnswers = new List<SelectedAnswer>();
             foreach (var question in testViewModel.AskedQuestions)
@@ -113,7 +111,7 @@ namespace UgraTestPoll.Controllers
                 switch (question.Type)
                 {
                     case AskedQuestionType.Checkbox:
-                        foreach (var id in question.MultipleSelectedAnswerIDs)
+                        foreach (var id in question.Answers.Where(x => x.Checked).Select(x => x.AnswerID))
                         {
                             var checkBoxAnswer = new CheckboxSelectedAnswer();
                             checkBoxAnswer.AnswerID = id;
@@ -124,8 +122,8 @@ namespace UgraTestPoll.Controllers
                     case AskedQuestionType.Input:
                         var inputAnswer = new InputSelectedAnswer();
                         inputAnswer.UserID = currentUserId;
-                        inputAnswer.Text = question.InputText;
-                        inputAnswer.AnswerID = int.Parse(question.SelectedAnswerID); 
+                        inputAnswer.Text = question.Answers.First().Text;
+                        inputAnswer.AnswerID = question.Answers.First().AnswerID;
                         selectedAnswers.Add(inputAnswer);
                         break;
                     case AskedQuestionType.Radio:

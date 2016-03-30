@@ -28,7 +28,7 @@ namespace UgraTestPoll.Controllers
         {
             var tests = new List<TestsListElementViewModel>();
             var dbTests = db.Users.Find(id).SelectedAnswers.Select(x => x.Answer).Select(x => x.Question).Distinct().Select(x => x.Test).Distinct(); //Get all tests passed by user                                                                       
-            foreach (var test in dbTests) 
+            foreach (var test in dbTests)
             {
                 tests.Add(new TestsListElementViewModel() { Name = test.Name, ID = test.ID, UserID = id });
             }
@@ -37,16 +37,16 @@ namespace UgraTestPoll.Controllers
         /// Resullts of given user in given test
         /// <param name="testId">Id of test</param>
         /// <param name="userId">Id of user</param>
-        /// <exception cref="WrongDBDataException">User with given id not found in database</exception>
+        /// <exception name="WrongDBDataException"></exception>
         /// <returns>Test with all questions, user selected answers and correct answers</returns>
         public PassedTestViewModel GetResults(int testId, int userId)
         {
-            if (db.Users.Find(userId) == null)
-            {
-                throw new WrongDBDataException("User with given id not found in database");
-            }
             var passedTestViewModel = new PassedTestViewModel();
             var dbTest = db.Tests.Find(testId);
+            if (dbTest == null)
+            {
+                throw new WrongDBDataException("Cannot find test with given id");
+            }
             passedTestViewModel.TestName = db.Tests.Find(testId).Name;
             passedTestViewModel.Questions = new List<PassedQuestionViewModel>();
             foreach (var question in dbTest.Questions)  //for each question get correct answers and user selected answers
@@ -59,6 +59,10 @@ namespace UgraTestPoll.Controllers
                 var correctAnswers = question.Answers.Where(x => x.Correct).Select(x => x.AnswerText);
                 passedQuestionVM.CorrectAnswers.AddRange(correctAnswers);
                 var passedAnswers = question.Answers.Select(x => x.SelectedAnswers).SelectMany(x => x).Where(x => x.UserID == userId);
+                if (passedAnswers.Count() < 1)
+                {
+                    throw new WrongDBDataException("Cannot find selected answers");
+                }
                 foreach (var passedAnswer in passedAnswers)
                 {
                     if (passedAnswer is InputSelectedAnswer) //For InputSelectedAnswer get answer text directly from selected answer, not from answer (by id)
@@ -73,6 +77,15 @@ namespace UgraTestPoll.Controllers
                 passedTestViewModel.Questions.Add(passedQuestionVM);
             }
             return passedTestViewModel;
+        }
+
+        /// <summary>
+        /// Check id user exists in db.
+        /// </summary>
+        /// <param name="userId"></param>
+        public bool IsUserExists(int userId)
+        {
+            return db.Users.Find(userId) != null;
         }
     }
 }

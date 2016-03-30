@@ -62,7 +62,7 @@ namespace UgraTestPoll.Controllers
             {
                 handler.SaveTestResults(testViewModel, User.Identity.Name);
             }
-            catch (WrongDBDataException) //User with given username not exists in db. Logout.
+            catch (UserNotFoundException) //User with given username not exists in db. Logout.
             {
                 return RedirectToAction("Logout", "Account");
             }
