@@ -8,7 +8,7 @@ namespace UgraTestPoll.ViewModels
     }
     /// <summary>
     /// Question Vm for passing test. 
-    /// К сожалению, я не понял, как вернуть из View в ActionResult абстрактный класс:/
+    /// К сожалению, я не понял, как вернуть из View в ActionResult абстрактный класс:/ А так его надо бы разбить на 1 абстрактный, и три наследника.
     /// For successful validation must have:
     ///     - Input text and SelectedAnswerID (if input answer)
     ///     - SelectedAnswerID (if radio answer)
