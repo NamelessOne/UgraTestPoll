@@ -37,9 +37,13 @@ namespace UgraTestPoll.Controllers
         /// <returns></returns>
         public ActionResult UserTests(int? id)
         {
-            if (id == null || !handler.IsUserExists(id.Value))
+            if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (!handler.IsUserExists(id.Value))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
             List<TestsListElementViewModel> tests;
             tests = handler.GetTestsForUser(id.Value);
@@ -53,9 +57,13 @@ namespace UgraTestPoll.Controllers
         /// <returns></returns>
         public ActionResult TestResults(int? id, int? userID)
         {
-            if (id == null || userID == null || !handler.IsUserExists(userID.Value))
+            if (id == null || userID == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (!handler.IsUserExists(userID.Value))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
             PassedTestViewModel passedTestViewModel = null;
             try
