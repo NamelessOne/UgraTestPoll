@@ -64,7 +64,7 @@ namespace UgraTestPoll.Controllers
             }
             catch (WrongDBDataException) //User with given username not exists in db. Logout.
             {
-                RedirectToAction("Logout", "Account");
+                return RedirectToAction("Logout", "Account");
             }
             return RedirectToAction("Index");
         }
